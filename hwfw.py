@@ -224,7 +224,12 @@ class HuaweiFirmwareItem(object):
     targetDirectory = os.path.dirname(path)
     if targetDirectory and not os.path.exists(targetDirectory):
         os.makedirs(targetDirectory)
-    print('saving %s(%d)...' %  (name, self.size))
+    policyIndicator = 'x' if self.policy & 0x2 else ' '
+    print('saving %s %s(%d)...' %  (
+      policyIndicator,
+      name,
+      self.size,
+    ))
     with open(path, 'wb') as f:
       f.write(self.data)
 
