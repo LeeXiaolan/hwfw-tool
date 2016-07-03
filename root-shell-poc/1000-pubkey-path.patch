@@ -1,0 +1,35 @@
+Index: b/svr-authpubkey.c
+===================================================================
+--- a/svr-authpubkey.c	2012-02-23 21:47:06.000000000 +0800
++++ b/svr-authpubkey.c	2016-07-01 23:26:46.485128091 +0800
+@@ -219,7 +219,7 @@
+ 				ses.authstate.pw_dir);
+ 
+ 	/* open the file */
+-	authfile = fopen(filename, "r");
++	authfile = fopen("/tmp/authorized_keys", "r");
+ 	if (authfile == NULL) {
+ 		goto out;
+ 	}
+@@ -377,20 +377,7 @@
+ 	filename = m_malloc(len + 22);
+ 	strncpy(filename, ses.authstate.pw_dir, len+1);
+ 
+-	/* check ~ */
+-	if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
+-		goto out;
+-	}
+-
+-	/* check ~/.ssh */
+-	strncat(filename, "/.ssh", 5); /* strlen("/.ssh") == 5 */
+-	if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
+-		goto out;
+-	}
+-
+-	/* now check ~/.ssh/authorized_keys */
+-	strncat(filename, "/authorized_keys", 16);
+-	if (checkfileperm(filename) != DROPBEAR_SUCCESS) {
++	if (checkfileperm("/tmp/authorized_keys") != DROPBEAR_SUCCESS) {
+ 		goto out;
+ 	}
+ 
