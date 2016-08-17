@@ -17,7 +17,7 @@ Usage:
 
 1. Modifying files interest you under the `fw` directory.
 
-		Usually the file marked with an `x`, it will be executed will `root` permission.
+		Usually the file marked with an `x`, it will be executed with `root` permission.
 
 1. `./hwfw pack -r fw upgrade-mod.bin`
 1. Happy upgrading or pwning.
