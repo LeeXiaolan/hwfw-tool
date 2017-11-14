@@ -26,11 +26,9 @@ static FollowLinkProc followLink;
 
 static void* hookedFollowLink(struct dentry* dentry, struct nameidata* nd){
   followLink(dentry, nd);
-  printk(KERN_ERR DRV_NAME ": symbol link %s.\n", nd_get_link(nd));
 	if(strcmp(nd_get_link(nd), HIJACK_PATH)){
 		return NULL;
 	}else{
-    printk(KERN_ERR DRV_NAME ": oops!\n");
 		return (void*)-ENOENT;
 	}
 }
