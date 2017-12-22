@@ -1,0 +1,18 @@
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -268,6 +268,7 @@ struct proc_inode {
+ 	struct proc_dir_entry *pde;
+ 	struct ctl_table_header *sysctl;
+ 	struct ctl_table *sysctl_entry;
++	u8 _dummy[8];
+ 	struct inode vfs_inode;
+ };
+ 
+@@ -280,6 +281,7 @@ static inline struct proc_dir_entry *PDE
+ {
+ 	return PROC_I(inode)->pde;
+ }
++BUILD_BUG_ON_(offsetof(struct proc_inode, vfs_inode) - offsetof(struct proc_inode, pde) != 0x14);
+ 
+ static inline struct net *PDE_NET(struct proc_dir_entry *pde)
+ {

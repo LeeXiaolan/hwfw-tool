@@ -1,0 +1,30 @@
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -771,4 +771,7 @@ struct sysinfo {
+ # define REBUILD_DUE_TO_FTRACE_MCOUNT_RECORD
+ #endif
+ 
++#define BUILD_BUG_ON___(c, line) static inline void _buildBugOn ## line (void){BUILD_BUG_ON(c);}
++#define BUILD_BUG_ON__(c, line) BUILD_BUG_ON___(c, line)
++#define BUILD_BUG_ON_(c) BUILD_BUG_ON__(c, __LINE__)
+ #endif
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -322,6 +322,7 @@ struct sk_buff {
+ 	 */
+ 	char			cb[48] __aligned(8);
+ 
++	char _dummy[8];
+ 	unsigned long		_skb_dst;
+ #ifdef CONFIG_XFRM
+ 	struct	sec_path	*sp;
+@@ -402,6 +403,9 @@ struct sk_buff {
+ 	unsigned int		truesize;
+ 	atomic_t		users;
+ };
++BUILD_BUG_ON_(offsetof(struct sk_buff, _skb_dst) != 0x50);
++BUILD_BUG_ON_(offsetof(struct sk_buff, network_header) != 0x94);
++BUILD_BUG_ON_(offsetof(struct sk_buff, data) != 0xa8);
+ 
+ #ifdef __KERNEL__
+ /*

@@ -1,0 +1,11 @@
+--- a/include/linux/kobject.h
++++ b/include/linux/kobject.h
+@@ -108,6 +108,8 @@ struct kobj_type {
+ 	void (*release)(struct kobject *kobj);
+ 	const struct sysfs_ops *sysfs_ops;
+ 	struct attribute **default_attrs;
++	const void *(*child_ns_type)(struct kobject * kobj);
++	const void *(*namespace)(struct kobject * kobj);
+ };
+ 
+ struct kobj_uevent_env {

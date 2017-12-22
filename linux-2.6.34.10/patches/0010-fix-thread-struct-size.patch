@@ -1,0 +1,32 @@
+--- a/arch/arm/include/asm/processor.h
++++ b/arch/arm/include/asm/processor.h
+@@ -50,7 +50,17 @@ struct thread_struct {
+ 	unsigned long		error_code;
+ 							/* debugging	  */
+ 	struct debug_info	debug;
++
++  /*
++   * Huawei ONT HG8120C has extra 8 bytes.
++   * By Xiaolan.Lee
++   */
++  u8 reserved[8];
+ };
++#include <linux/kernel.h>
++static inline void _thread_struct_size_detect(void){
++  BUILD_BUG_ON(sizeof(struct thread_struct) != 40);
++}
+ 
+ #define INIT_THREAD  {	}
+ 
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1508,6 +1508,9 @@ struct task_struct {
+ 	} memcg_batch;
+ #endif
+ };
++static inline void _task_struct_size_detect(void){
++  BUILD_BUG_ON(sizeof(struct task_struct) != 1032);
++}
+ 
+ /* Future-safe accessor for struct task_struct's cpus_allowed. */
+ #define tsk_cpus_allowed(tsk) (&(tsk)->cpus_allowed)

@@ -1,0 +1,15 @@
+--- a/include/net/net_namespace.h
++++ b/include/net/net_namespace.h
+@@ -90,8 +90,12 @@ struct net {
+ #ifdef CONFIG_WEXT_CORE
+ 	struct sk_buff_head	wext_nlevents;
+ #endif
++	u8 _dummy[0x38];
+ 	struct net_generic	*gen;
+ };
++static inline void _gen_offset_of_net_struct_size_detect(void){
++  BUILD_BUG_ON(offsetof(struct net, gen) != 0x4a4);
++}
+ 
+ 
+ #include <linux/seq_file_net.h>

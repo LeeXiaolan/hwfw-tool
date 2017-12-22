@@ -1,0 +1,20 @@
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -139,6 +139,7 @@ struct vm_area_struct {
+ 	pgprot_t vm_page_prot;		/* Access permissions of this VMA. */
+ 	unsigned long vm_flags;		/* Flags, see mm.h. */
+ 
++	void *reserved;                 /* Fix vm_rb alignment. */
+ 	struct rb_node vm_rb;
+ 
+ 	/*
+@@ -184,6 +185,9 @@ struct vm_area_struct {
+ 	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
+ #endif
+ };
++static inline void _vm_rb_alignment_detect(void){
++  BUILD_BUG_ON(offsetof(struct vm_area_struct, vm_rb) != 32);
++}
+ 
+ struct core_thread {
+ 	struct task_struct *task;

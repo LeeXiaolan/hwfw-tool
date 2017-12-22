@@ -1,0 +1,10 @@
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -478,6 +478,7 @@ struct dev_pm_info {
+ 	int			runtime_error;
+ #endif
+ };
++BUILD_BUG_ON_(sizeof(struct dev_pm_info) != 0xc);
+ 
+ /*
+  * The PM_EVENT_ messages are also used by drivers implementing the legacy
