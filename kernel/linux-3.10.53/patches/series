@@ -1,0 +1,22 @@
+# 0xxx from upstream.
+# 1xxx custom patch.
+
+1005-struct-spinlock.patch
+1010-force-tracepoints-in-struct-module.patch
+0005-get-rid-of-s_files-and-files_lock.patch
+1020-struct-super-block.patch
+0010-helper-for-reading-d_count.patch
+0020-add-new-lockref-infrastructure-reference-implementation.patch
+0030-vfs-make-the-dentry-cache-use-the-lockref-infrastructure.patch
+1030-struct-dentry.patch
+1040-struct-inode.patch
+1050-struct-file.patch
+1060-struct-inode_operations.patch
+0040-overlayfs.patch
+0050-overlayfs-populate-super-block-d_op.patch
+0060-vfs-introduce-inode-getting-helpers-for-layered-unioned-fs-environments.patch
+0070-overlayfs-make-f_path-always-point-to-the-overlay-and-f_inode-to-the.underlay.patch
+0080-fix-a-braino-in-ovl_d_select_inode.patch
+1070-struct-netns_ipv4.patch
+1080-struct-netns_ct.patch
+1090-struct-net.patch

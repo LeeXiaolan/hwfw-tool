@@ -1,0 +1,19 @@
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -817,6 +817,16 @@ struct file {
+ 	unsigned long f_mnt_write_state;
+ #endif
+ };
++BUILD_BUG_ON_(8 != offsetof(struct file, f_path));
++BUILD_BUG_ON_(16 != offsetof(struct file, f_inode));
++BUILD_BUG_ON_(20 != offsetof(struct file, f_op));
++BUILD_BUG_ON_(24 != offsetof(struct file, f_lock));
++BUILD_BUG_ON_(36 != offsetof(struct file, f_count));
++BUILD_BUG_ON_(40 != offsetof(struct file, f_flags));
++BUILD_BUG_ON_(44 != offsetof(struct file, f_mode));
++BUILD_BUG_ON_(48 != offsetof(struct file, f_pos));
++BUILD_BUG_ON_(120 != offsetof(struct file, f_version));
++BUILD_BUG_ON_(132 != offsetof(struct file, private_data));
+ 
+ struct file_handle {
+ 	__u32 handle_bytes;

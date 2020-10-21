@@ -1,0 +1,29 @@
+e9be9d5e76e34872f0c37d72e25bc27fe9e2c54c
+
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -357,7 +357,6 @@ static int ovl_do_lookup(struct dentry *
+ 		oe->lowerdentry = lowerdentry;
+ 
+ 	dentry->d_fsdata = oe;
+-	dentry->d_op = &ovl_dentry_operations;
+ 	d_add(dentry, inode);
+ 
+ 	return 0;
+@@ -600,6 +599,8 @@ static int ovl_fill_super(struct super_b
+ 			goto out_put_lower_mnt;
+ 	}
+ 
++	sb->s_d_op = &ovl_dentry_operations;
++
+ 	err = -ENOMEM;
+ 	root_inode = ovl_new_inode(sb, S_IFDIR, oe);
+ 	if (!root_inode)
+@@ -616,7 +617,6 @@ static int ovl_fill_super(struct super_b
+ 	oe->lowerdentry = lowerpath.dentry;
+ 
+ 	root_dentry->d_fsdata = oe;
+-	root_dentry->d_op = &ovl_dentry_operations;
+ 
+ 	sb->s_magic = OVERLAYFS_SUPER_MAGIC;
+ 	sb->s_op = &ovl_super_operations;

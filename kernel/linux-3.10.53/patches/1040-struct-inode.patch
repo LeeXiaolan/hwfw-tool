@@ -1,0 +1,35 @@
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -600,14 +600,32 @@ struct inode {
+ 
+ #ifdef CONFIG_FSNOTIFY
+ 	__u32			i_fsnotify_mask; /* all events this inode cares about */
++	char dummy4[4];
+ 	struct hlist_head	i_fsnotify_marks;
+ #endif
+ 
+ #ifdef CONFIG_IMA
+ 	atomic_t		i_readcount; /* struct files open RO */
+ #endif
++	char dummy5[4];
++	struct mutex dummy3;
+ 	void			*i_private; /* fs or device private pointer */
+ };
++BUILD_BUG_ON_(20 != offsetof(struct inode, i_sb));
++BUILD_BUG_ON_(32 != offsetof(struct inode, i_ino));
++BUILD_BUG_ON_(48 != offsetof(struct inode, i_size));
++BUILD_BUG_ON_(80 != offsetof(struct inode, i_lock));
++BUILD_BUG_ON_(96 != offsetof(struct inode, i_blkbits));
++BUILD_BUG_ON_(112 != offsetof(struct inode, i_mutex));
++BUILD_BUG_ON_(196 != offsetof(struct inode, i_dentry));
++BUILD_BUG_ON_(216 != offsetof(struct inode, i_count));
++BUILD_BUG_ON_(228 != offsetof(struct inode, i_fop));
++BUILD_BUG_ON_(236 != offsetof(struct inode, i_data));
++BUILD_BUG_ON_(372 != offsetof(struct inode, i_devices));
++BUILD_BUG_ON_(388 != offsetof(struct inode, i_fsnotify_mask));
++BUILD_BUG_ON_(396 != offsetof(struct inode, i_fsnotify_marks));
++BUILD_BUG_ON_(404 != offsetof(struct inode, dummy3));
++BUILD_BUG_ON_(452 != offsetof(struct inode, i_private));
+ 
+ static inline int inode_unhashed(struct inode *inode)
+ {

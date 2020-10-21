@@ -1,0 +1,13 @@
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -334,10 +334,8 @@ struct module
+ 	unsigned int percpu_size;
+ #endif
+ 
+-#ifdef CONFIG_TRACEPOINTS
+ 	unsigned int num_tracepoints;
+ 	struct tracepoint * const *tracepoints_ptrs;
+-#endif
+ #ifdef HAVE_JUMP_LABEL
+ 	struct jump_entry *jump_entries;
+ 	unsigned int num_jump_entries;

@@ -1,0 +1,17 @@
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -132,6 +132,14 @@ struct dentry {
+ 	struct list_head d_subdirs;	/* our children */
+ 	struct hlist_node d_alias;	/* inode alias list */
+ };
++BUILD_BUG_ON_(16 != offsetof(struct dentry, d_parent));
++BUILD_BUG_ON_(24 != offsetof(struct dentry, d_name));
++BUILD_BUG_ON_(40 != offsetof(struct dentry, d_inode));
++BUILD_BUG_ON_(44 != offsetof(struct dentry, d_iname));
++BUILD_BUG_ON_(80 != offsetof(struct dentry, d_lockref));
++BUILD_BUG_ON_(96 != offsetof(struct dentry, d_op));
++BUILD_BUG_ON_(100 != offsetof(struct dentry, d_sb));
++BUILD_BUG_ON_(108 != offsetof(struct dentry, d_fsdata));
+ 
+ /*
+  * dentry->d_lock spinlock nesting subclasses:

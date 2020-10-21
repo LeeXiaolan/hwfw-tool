@@ -1,0 +1,83 @@
+From 155e35d4daa804582f75acaa2c74ec797a89c615 Mon Sep 17 00:00:00 2001
+From: David Howells <dhowells@redhat.com>
+Date: Thu, 29 Jan 2015 12:02:27 +0000
+Subject: VFS: Introduce inode-getting helpers for layered/unioned fs
+ environments
+
+Introduce some function for getting the inode (and also the dentry) in an
+environment where layered/unioned filesystems are in operation.
+
+The problem is that we have places where we need *both* the union dentry and
+the lower source or workspace inode or dentry available, but we can only have
+a handle on one of them.  Therefore we need to derive the handle to the other
+from that.
+
+The idea is to introduce an extra field in struct dentry that allows the union
+dentry to refer to and pin the lower dentry.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -424,4 +424,60 @@ static inline bool d_mountpoint(struct d
+ 
+ extern int sysctl_vfs_cache_pressure;
+ 
++/**
++ * d_inode - Get the actual inode of this dentry
++ * @dentry: The dentry to query
++ *
++ * This is the helper normal filesystems should use to get at their own inodes
++ * in their own dentries and ignore the layering superimposed upon them.
++ */
++static inline struct inode *d_inode(const struct dentry *dentry)
++{
++	return dentry->d_inode;
++}
++
++/**
++ * d_inode_rcu - Get the actual inode of this dentry with ACCESS_ONCE()
++ * @dentry: The dentry to query
++ *
++ * This is the helper normal filesystems should use to get at their own inodes
++ * in their own dentries and ignore the layering superimposed upon them.
++ */
++static inline struct inode *d_inode_rcu(const struct dentry *dentry)
++{
++	return ACCESS_ONCE(dentry->d_inode);
++}
++
++/**
++ * d_backing_inode - Get upper or lower inode we should be using
++ * @upper: The upper layer
++ *
++ * This is the helper that should be used to get at the inode that will be used
++ * if this dentry were to be opened as a file.  The inode may be on the upper
++ * dentry or it may be on a lower dentry pinned by the upper.
++ *
++ * Normal filesystems should not use this to access their own inodes.
++ */
++static inline struct inode *d_backing_inode(const struct dentry *upper)
++{
++	struct inode *inode = upper->d_inode;
++
++	return inode;
++}
++
++/**
++ * d_backing_dentry - Get upper or lower dentry we should be using
++ * @upper: The upper layer
++ *
++ * This is the helper that should be used to get the dentry of the inode that
++ * will be used if this dentry were opened as a file.  It may be the upper
++ * dentry or it may be a lower dentry pinned by the upper.
++ *
++ * Normal filesystems should not use this to access their own dentries.
++ */
++static inline struct dentry *d_backing_dentry(struct dentry *upper)
++{
++	return upper;
++}
++
+ #endif	/* __LINUX_DCACHE_H */

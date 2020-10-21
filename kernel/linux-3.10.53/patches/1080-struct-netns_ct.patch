@@ -1,0 +1,9 @@
+--- a/include/net/netns/conntrack.h
++++ b/include/net/netns/conntrack.h
+@@ -100,5 +100,6 @@ struct netns_ct {
+ 	struct ctl_table_header	*helper_sysctl_header;
+ #endif
+ 	char			*slabname;
++	char dummy[25];
+ };
+ #endif

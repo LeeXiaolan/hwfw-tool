@@ -1,0 +1,21 @@
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1598,6 +1598,7 @@ struct inode_operations {
+ 	int (*mknod) (struct inode *,struct dentry *,umode_t,dev_t);
+ 	int (*rename) (struct inode *, struct dentry *,
+ 			struct inode *, struct dentry *);
++	void *dummy;
+ 	int (*setattr) (struct dentry *, struct iattr *);
+ 	int (*getattr) (struct vfsmount *mnt, struct dentry *, struct kstat *);
+ 	int (*setxattr) (struct dentry *, const char *,const void *,size_t,int);
+@@ -1611,6 +1612,10 @@ struct inode_operations {
+ 			   struct file *, unsigned open_flag,
+ 			   umode_t create_mode, int *opened);
+ } ____cacheline_aligned;
++BUILD_BUG_ON_(40 != offsetof(struct inode_operations, mkdir));
++BUILD_BUG_ON_(52 != offsetof(struct inode_operations, rename));
++BUILD_BUG_ON_(60 != offsetof(struct inode_operations, setattr));
++BUILD_BUG_ON_(64 != offsetof(struct inode_operations, getattr));
+ 
+ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+ 			      unsigned long nr_segs, unsigned long fast_segs,

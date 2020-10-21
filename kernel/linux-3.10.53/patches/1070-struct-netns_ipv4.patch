@@ -1,0 +1,9 @@
+--- a/include/net/netns/ipv4.h
++++ b/include/net/netns/ipv4.h
+@@ -77,5 +77,6 @@ struct netns_ipv4 {
+ 	struct fib_rules_ops	*mr_rules_ops;
+ #endif
+ #endif
++	char dummy[53];
+ };
+ #endif

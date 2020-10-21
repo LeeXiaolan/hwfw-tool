@@ -1,0 +1,19 @@
+fix a braino in ovl_d_select_inode()
+
+when opening a directory we want the overlayfs inode, not one from
+the topmost layer.
+
+d706c400314ac9486012fd52f1efc48e6cb7678a
+
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -288,6 +288,9 @@ struct inode *ovl_d_select_inode(struct
+ 	struct path realpath;
+ 	enum ovl_path_type type;
+ 
++	if(dentry->d_inode && S_ISDIR(dentry->d_inode->i_mode))
++		return dentry->d_inode;
++
+ 	type = ovl_path_real(dentry, &realpath);
+ 	if (ovl_open_need_copy_up(file_flags, type, realpath.dentry)) {
+ 		if (file_flags & O_TRUNC)

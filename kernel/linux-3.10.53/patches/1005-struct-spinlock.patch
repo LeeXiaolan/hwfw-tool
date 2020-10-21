@@ -1,0 +1,10 @@
+--- a/include/linux/spinlock_types.h
++++ b/include/linux/spinlock_types.h
+@@ -73,6 +73,7 @@ typedef struct spinlock {
+ 		};
+ #endif
+ 	};
++	u32 dummy[2];
+ } spinlock_t;
+ 
+ #define __SPIN_LOCK_INITIALIZER(lockname) \

@@ -1,0 +1,72 @@
+--- a/include/linux/bug.h
++++ b/include/linux/bug.h
+@@ -109,4 +109,7 @@ static inline enum bug_trap_type report_
+ }
+ 
+ #endif	/* CONFIG_GENERIC_BUG */
++#define BUILD_BUG_ON___(c, line) static inline void _buildBugOn ## line (void){((void)sizeof(char[1 - 2*!!(c)]));}
++#define BUILD_BUG_ON__(c, line) BUILD_BUG_ON___(c, line)
++#define BUILD_BUG_ON_(c) BUILD_BUG_ON__(c, __LINE__)
+ #endif	/* _LINUX_BUG_H */
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1310,6 +1310,26 @@ struct super_block {
+ 	/* Being remounted read-only */
+ 	int s_readonly_remount;
+ };
++BUILD_BUG_ON_(60 != offsetof(struct super_block, s_root));
++BUILD_BUG_ON_(64 != offsetof(struct super_block, s_umount));
++BUILD_BUG_ON_(104 != offsetof(struct super_block, s_count));
++BUILD_BUG_ON_(0x6c != offsetof(struct super_block, s_active));
++BUILD_BUG_ON_(120 != offsetof(struct super_block, s_inodes));
++BUILD_BUG_ON_(128 != offsetof(struct super_block, s_anon));
++BUILD_BUG_ON_(132 != offsetof(struct super_block, s_mounts));
++BUILD_BUG_ON_(192 != offsetof(struct super_block, s_inode_lru_lock));
++BUILD_BUG_ON_(204 != offsetof(struct super_block, s_inode_lru));
++BUILD_BUG_ON_(220 != offsetof(struct super_block, s_bdi));
++BUILD_BUG_ON_(224 != offsetof(struct super_block, s_mtd));
++BUILD_BUG_ON_(240 != offsetof(struct super_block, s_dquot));
++BUILD_BUG_ON_(512 != offsetof(struct super_block, s_writers));
++BUILD_BUG_ON_(656 != offsetof(struct super_block, s_id));
++BUILD_BUG_ON_(0x2c0 != offsetof(struct super_block, s_fs_info));
++BUILD_BUG_ON_(0x2cc != offsetof(struct super_block, s_time_gran));
++BUILD_BUG_ON_(0x27c != offsetof(struct super_block, s_shrink) - offsetof(struct super_block, s_nr_dentry_unused));
++BUILD_BUG_ON_(0x23c != offsetof(struct super_block, s_shrink) - offsetof(struct super_block, s_nr_inodes_unused));
++BUILD_BUG_ON_(776 != offsetof(struct super_block, s_d_op));
++BUILD_BUG_ON_(812 != offsetof(struct super_block, s_readonly_remount));
+ 
+ /* superblock cache pruning functions */
+ extern void prune_icache_sb(struct super_block *sb, int nr_to_scan);
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -17,6 +17,8 @@
+ 
+ #include <linux/atomic.h>
+ 
++#include <linux/bug.h>
++
+ /*
+  * Simple, straightforward mutexes with strict semantics:
+  *
+@@ -63,7 +65,9 @@ struct mutex {
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	struct lockdep_map	dep_map;
+ #endif
++	char dummy[16];
+ };
++BUILD_BUG_ON_(48 != sizeof(struct mutex));
+ 
+ /*
+  * This is the control structure for tasks blocked on mutex,
+--- a/include/linux/rwsem-spinlock.h
++++ b/include/linux/rwsem-spinlock.h
+@@ -27,7 +27,9 @@ struct rw_semaphore {
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	struct lockdep_map dep_map;
+ #endif
++	char dummy[24];
+ };
++BUILD_BUG_ON_(40 != sizeof(struct rw_semaphore));
+ 
+ #define RWSEM_UNLOCKED_VALUE		0x00000000
+ 

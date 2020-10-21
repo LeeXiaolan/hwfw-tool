@@ -1,0 +1,21 @@
+--- a/include/net/net_namespace.h
++++ b/include/net/net_namespace.h
+@@ -119,6 +119,18 @@ struct net {
+ 	struct sock		*diag_nlsk;
+ 	atomic_t		rt_genid;
+ };
++BUILD_BUG_ON_(8 != offsetof(struct net, rules_mod_lock));
++BUILD_BUG_ON_(20 != offsetof(struct net, list));
++BUILD_BUG_ON_(136 != offsetof(struct net, ifindex));
++BUILD_BUG_ON_(268 != offsetof(struct net, unx));
++BUILD_BUG_ON_(320 != offsetof(struct net, ipv4));
++BUILD_BUG_ON_(704 != offsetof(struct net, ipv6));
++BUILD_BUG_ON_(1216 != offsetof(struct net, nf));
++BUILD_BUG_ON_(1384 != offsetof(struct net, ct));
++BUILD_BUG_ON_(1728 != offsetof(struct net, nf_frag));
++BUILD_BUG_ON_(1920 != offsetof(struct net, nfnl));
++BUILD_BUG_ON_(1928 != offsetof(struct net, wext_nlevents));
++BUILD_BUG_ON_(1952 != offsetof(struct net, gen));
+ 
+ /*
+  * ifindex generation is per-net namespace, and loopback is
